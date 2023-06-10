@@ -19,11 +19,11 @@ class UserGetSerializer(UserSerializer):
                   'is_subscribed')
 
     def get_is_subscribed(self, obj):
-        if (self.context.get('request')
-           and not self.context['request'].user.is_anonymous):
-            return Subscribe.objects.filter(user=self.context['request'].user,
-                                            following=obj).exists()
-        return False
+        return (
+            'request' in self.context
+            and self.context.get('request').user.is_authenticated
+            and Subscribe.objects.filter(user=self.context['request'].user, following=obj).exists()
+        )
 
 
 class UserPostSerializer(UserCreateSerializer):
@@ -33,18 +33,13 @@ class UserPostSerializer(UserCreateSerializer):
         fields = ('email', 'id', 'username',
                   'first_name', 'last_name',
                   'password')
-        extra_kwargs = {
-            'first_name': {'required': True, 'allow_blank': False},
-            'last_name': {'required': True, 'allow_blank': False},
-            'email': {'required': True, 'allow_blank': False},
-        }
 
     def validate(self, obj):
-        invalid_usernames = ['me', 'set_password',
-                             'subscriptions', 'subscribe']
+        invalid_usernames = ('me', 'set_password',
+                             'subscriptions', 'subscribe')
         if self.initial_data.get('username') in invalid_usernames:
             raise serializers.ValidationError(
-                {'username': 'Username не уникальный.'}
+                {'username': 'Невозможно использовать данный username.'}
             )
         return obj
 
@@ -74,7 +69,7 @@ class SetPasswordSerializer(serializers.Serializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-
+    """Список тегов."""
     class Meta:
         model = Tag
         fields = (
@@ -84,6 +79,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
+    """Список ингредиентов."""
 
     class Meta:
         model = Ingredient
@@ -92,9 +88,6 @@ class IngredientSerializer(serializers.ModelSerializer):
             'name',
             'measurement_unit',
         )
-        # из обязательных поля становятся необязат.для заполнения
-        extra_kwargs = {'name': {'required': False},
-                        'measurement_unit': {'required': False}}
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
@@ -147,6 +140,8 @@ class RecipeSerializer(serializers.ModelSerializer):
 class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
     """Ингредиент и количество для создания рецепта."""
     id = serializers.IntegerField()
+    # Переопределение поля необходимо для создания рецепта
+    # При создании рецепта мне нужно передать id ингредиента.
 
     class Meta:
         model = IngredientRecipe
@@ -175,14 +170,31 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             'cooking_time',
             'author'
         )
-        extra_kwargs = {
-            'ingredients': {'required': True, 'allow_blank': False},
-            'tags': {'required': True, 'allow_blank': False},
-            'name': {'required': True, 'allow_blank': False},
-            'text': {'required': True, 'allow_blank': False},
-            'image': {'required': True, 'allow_blank': False},
-            'cooking_time': {'required': True},
-        }
+
+    def validate(self, obj):
+        if not obj.get('tags'):
+            raise serializers.ValidationError(
+                'Количество тегов должно быть больше или равно 1.'
+            )
+        if not obj.get('ingredients'):
+            raise serializers.ValidationError(
+                'Количество ингредиентов должно быть больше или равно 1.'
+            )
+
+        inrgedient_id = [item['id'] for item in obj.get('ingredients')]
+        ingredient_set = set(inrgedient_id)
+        if len(inrgedient_id) != len(ingredient_set):
+            raise serializers.ValidationError(
+                'Введите уникальные ингредиенты.'
+            )
+
+        tag_id = [item.id for item in obj.get('tags')]
+        set_tag = set(tag_id)
+        if len(tag_id) != len(set_tag):
+            raise serializers.ValidationError(
+                'Введите уникальные теги.'
+            )
+        return obj
 
     def set_on_ingredients_tags(self, recipe, tags, ingredients):
         recipe.tags.set(tags)

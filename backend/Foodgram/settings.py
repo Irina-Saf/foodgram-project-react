@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,6 +33,7 @@ INSTALLED_APPS = [
     'recipes',
     'users',
     'api',
+    'colorfield',
 ]
 
 MIDDLEWARE = [
@@ -80,10 +82,14 @@ DATABASES = {
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
+    # {
+    #     'NAME':
+    #         'django.contrib.auth.password_validation. \
+    #             UserAttributeSimilarityValidator',
+    # },
     {
         'NAME':
-            'django.contrib.auth.password_validation. \
-                UserAttributeSimilarityValidator',
+            'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
         'NAME':
@@ -124,6 +130,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # CSV_FILES_DIR = os.path.join(BASE_DIR, 'data/')
 
 

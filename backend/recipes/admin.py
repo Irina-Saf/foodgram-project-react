@@ -36,7 +36,7 @@ class TagAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
         'name',
-        'slug'
+        Tag.trim10
     )
     search_fields = ('name',)
     empty_value_display = "-пусто-"
@@ -47,7 +47,8 @@ class TagAdmin(admin.ModelAdmin):
 class IngredientAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
-        'name',
+        # 'name',
+        Ingredient.trim30,
         'measurement_unit'
     )
     search_fields = ('name',)
@@ -58,7 +59,8 @@ class IngredientAdmin(admin.ModelAdmin):
 class RecipeAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
-        'name',
+        # 'name',
+        Recipe.trim50,
         'text',
         'cooking_time',
         'pub_date',

@@ -5,6 +5,7 @@ charset-normalizer==3.1.0
 cryptography==41.0.1
 defusedxml==0.7.1
 Django==4.2.1
+django-colorfield==0.8.0
 django-templated-mail==1.1.1
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
@@ -26,3 +27,6 @@ social-auth-core==4.4.2
 sqlparse==0.4.4
 tzdata==2023.3
 urllib3==2.0.2
+django-filter==2.4.0
+gunicorn==20.0.4
+psycopg2-binary==2.8.6

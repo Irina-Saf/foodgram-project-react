@@ -1,7 +1,13 @@
-from django.core.validators import MinValueValidator
+from colorfield.fields import ColorField
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models import PositiveSmallIntegerField
 
 from users.models import User
+
+MIN_VALUE_COOKING_TIME = 1,
+MAX_VALUE_COOKING_TIME = 300,
+MIN_VALUE_AMOUNT = 1,
 
 
 class Tag(models.Model):
@@ -10,11 +16,10 @@ class Tag(models.Model):
         max_length=200,
         verbose_name='Название тега',
         help_text='Введите название тега',
-        blank=True,
         unique=True
     )
-    color = models.CharField(
-        max_length=7,
+    color = ColorField(
+        format="hexa",
         verbose_name='Цвет',
         unique=True
     )
@@ -24,6 +29,10 @@ class Tag(models.Model):
         verbose_name='Слаг',
         unique=True
     )
+
+    def trim10(self):
+        return u"%s..." % (self.slug[:10],)
+    trim10.short_description = 'Слаг'
 
     class Meta:
         verbose_name = 'Тег'
@@ -46,6 +55,10 @@ class Ingredient(models.Model):
         verbose_name='Единица измерения',
     )
 
+    def trim30(self):
+        return u"%s..." % (self.name[:30],)
+    trim30.short_description = 'Название ингредиента'
+
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
@@ -60,22 +73,23 @@ class Recipe(models.Model):
         max_length=200,
         verbose_name='Название рецепта',
         help_text='Введите название рецепта',
-        blank=True
     )
     image = models.ImageField(
         verbose_name='Изображение',
         upload_to='recipes/image/',
-        blank=True
     )
     text = models.TextField(
         verbose_name='Описание рецепта',
         help_text='Введите описание рецепта',
-        blank=True
     )
-    cooking_time = models.IntegerField(
+    cooking_time = PositiveSmallIntegerField(
         verbose_name='Время приготовления',
         help_text='Введите время приготовлления',
-        blank=True
+        default=0,
+        validators=(
+            MinValueValidator(*MIN_VALUE_COOKING_TIME),
+            MaxValueValidator(*MAX_VALUE_COOKING_TIME),
+        ),
     )
     pub_date = models.DateTimeField(
         verbose_name='Дата публикации',
@@ -87,7 +101,6 @@ class Recipe(models.Model):
         verbose_name='Автор рецепта',
         related_name='recipes',
         help_text='Выберите автора рецепта',
-        blank=True
         # null=True
     )
 
@@ -106,6 +119,10 @@ class Recipe(models.Model):
         help_text='Укажите ингредиент рецепта',
         verbose_name='Ингредиент рецепта'
     )
+
+    def trim50(self):
+        return u"%s..." % (self.name[:50],)
+    trim50.short_description = 'Название рецепта'
 
     class Meta:
         verbose_name = 'Рецепт'
@@ -155,9 +172,9 @@ class IngredientRecipe(models.Model):
         related_name='ingredients',
         verbose_name='Ингредиент'
     )
-    amount = models.IntegerField(
+    amount = PositiveSmallIntegerField(
         'Количество',
-        validators=[MinValueValidator(1)]
+        validators=[MinValueValidator(*MIN_VALUE_AMOUNT)]
     )
 
     class Meta:
@@ -178,6 +195,7 @@ class IngredientRecipe(models.Model):
 
 
 class Basket(models.Model):
+    """Модель корзины"""
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
