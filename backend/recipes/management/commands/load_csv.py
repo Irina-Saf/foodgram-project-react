@@ -1,19 +1,17 @@
 import csv
 
 from django.core.management import BaseCommand
+import os
 
 from Foodgram.settings import BASE_DIR
 from recipes.models import Ingredient
-
-# CSV_FILES_DIR = 'C:\\Users\\lis91\\Documents\\Dev\\foodgram-project-react\\data/'
-
-DIR = str(BASE_DIR) + '\\data\\'
 
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        with open(DIR + 'ingredients.csv',
+        path = os.path.join(BASE_DIR, 'data\\ingredients.csv') 
+        with open(path ,
                   encoding='utf-8') as csv_file:
             csv_reader = csv.DictReader(csv_file, delimiter=',')
             # Ingredient.objects.all().delete()
