@@ -9,7 +9,7 @@ services:
       - ./.env
 
   backend:
-      # image: andyplo/foodgram_backend:v.21.12.22
+     # image:
       build:
         context: ../backend
         dockerfile: Dockerfile
@@ -23,7 +23,10 @@ services:
         - ./.env
 
   frontend:
-    image: andyplo/foodgram_frontend:v.21.12.22
+   # image:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
