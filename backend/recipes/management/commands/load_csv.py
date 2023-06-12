@@ -7,7 +7,7 @@ from recipes.models import Ingredient
 
 # CSV_FILES_DIR = 'C:\\Users\\lis91\\Documents\\Dev\\foodgram-project-react\\data/'
 
-DIR = str(BASE_DIR).replace('backend', 'data\\')
+DIR = str(BASE_DIR) + '\\data\\'
 
 
 class Command(BaseCommand):
