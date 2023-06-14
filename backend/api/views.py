@@ -29,14 +29,14 @@ class TagViewSet(viewsets.ModelViewSet):
     serializer_class = TagSerializer
     permission_classes = (AllowAny,)
     search_fields = ('name',)
-    pagination_class = None
+    # pagination_class = None
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = (IsAuthorOrReadOnly,)
     search_fields = ('name',)
-    pagination_class = None
+    pagination_class = CustomPaginator
 
     def get_serializer_class(self):
         if self.action in ('create', 'update', 'partial_update'):
