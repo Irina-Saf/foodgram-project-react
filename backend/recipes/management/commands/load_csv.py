@@ -10,7 +10,7 @@ from recipes.models import Ingredient
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        path = os.path.join(BASE_DIR, 'data\\ingredients.csv') 
+        path = os.path.join(BASE_DIR, 'data/ingredients.csv')
         with open(path ,
                   encoding='utf-8') as csv_file:
             csv_reader = csv.DictReader(csv_file, delimiter=',')
