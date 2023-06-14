@@ -9,24 +9,24 @@ services:
       - ./.env
 
   backend:
-      image: irinasaf/infra_backend:latest
-     # build:
-      #  context: ../backend
-       # dockerfile: Dockerfile
-      restart: always
-      volumes:
-        - static_value:/app/staticfiles/
-        - media_value:/app/media/
-      depends_on:
-        - db
-      env_file:
-        - ./.env
+    # image: irinasaf/infra_backend:latest
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - static_value:/app/staticfiles/
+      - media_value:/app/media/
+    depends_on:
+      - db
+    env_file:
+      - ./.env
 
   frontend:
-    image: irinasaf/infra_frontend:latest
-   # build:
-     # context: ../frontend
-      #dockerfile: Dockerfile
+    # image: irinasaf/infra_frontend:latest
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
