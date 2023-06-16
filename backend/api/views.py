@@ -29,7 +29,7 @@ class TagViewSet(viewsets.ModelViewSet):
     serializer_class = TagSerializer
     permission_classes = (AllowAny,)
     search_fields = ('name',)
-    pagination_class = CustomPaginator
+    pagination_class = None
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
