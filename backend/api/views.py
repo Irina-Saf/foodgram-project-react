@@ -10,6 +10,7 @@ from recipes.models import (Basket, Favorite, Ingredient, IngredientRecipe,
                             Recipe, Tag)
 from users.models import User
 
+from .filters import RecipeFilter
 from .mixins import UserViewSetMixin
 from .pagination import CustomPaginator
 from .permissions import IsAuthorOrReadOnly
@@ -37,6 +38,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthorOrReadOnly,)
     search_fields = ('name',)
     pagination_class = CustomPaginator
+    filterset_class = RecipeFilter
 
     def get_serializer_class(self):
         if self.action in ('create', 'update', 'partial_update'):
