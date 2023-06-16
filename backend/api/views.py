@@ -36,9 +36,10 @@ class TagViewSet(viewsets.ModelViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = (IsAuthorOrReadOnly,)
+    filterset_class = RecipeFilter
     search_fields = ('name',)
     pagination_class = CustomPaginator
-    filterset_class = RecipeFilter
+    
 
     def get_serializer_class(self):
         if self.action in ('create', 'update', 'partial_update'):
