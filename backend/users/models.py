@@ -77,8 +77,13 @@ class Subscribe(models.Model):
         verbose_name_plural = 'Подписки'
         constraints = [
             models.UniqueConstraint(fields=['user', 'following'],
-                                    name='unique_subscribe')
-        ]
+                                    name='unique_subscribe'),
+            models.CheckConstraint(
+                check=~models.Q(user=models.F('following')),
+                # name='user_and_following_different'
+                name='Нельзя подписываться на себя'
+            )
+                ]
 
     def __str__(self):
         return f'{self.user} {self.following}'

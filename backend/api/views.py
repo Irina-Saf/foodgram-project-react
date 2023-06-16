@@ -29,7 +29,7 @@ class TagViewSet(viewsets.ModelViewSet):
     serializer_class = TagSerializer
     permission_classes = (AllowAny,)
     search_fields = ('name',)
-    # pagination_class = None
+    pagination_class = CustomPaginator
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -104,7 +104,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def download_shopping_cart(self, request, **kwargs):
         ingredients = (
             IngredientRecipe.objects
-            .filter(recipe__bascets__user=request.user)
+            .filter(recipe__baskets__user=request.user)
             .values('ingredient')
             .annotate(total_amount=Sum('amount'))
             .values_list('ingredient__name', 'total_amount',
@@ -127,4 +127,4 @@ class IngredientViewSet(viewsets.ModelViewSet):
     serializer_class = IngredientSerializer
     permission_classes = (AllowAny, )
     search_fields = ('name',)
-    pagination_class = None
+    pagination_class = CustomPaginator

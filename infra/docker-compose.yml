@@ -9,7 +9,10 @@ services:
       - ./.env
 
   backend:
-    image: irinasaf/infra_backend:latest
+    # image: irinasaf/infra_backend:latest
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
     restart: always
     volumes:
       - static_value:/app/staticfiles/

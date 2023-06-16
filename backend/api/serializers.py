@@ -105,7 +105,7 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
 
 class RecipeReadSerializer(serializers.ModelSerializer):
     """Получить список рецептов"""
-    author = UserSerializer(read_only=True)
+    author = UserGetSerializer(read_only=True)
     tags = TagSerializer(many=True)
     image = Base64ImageField()
     ingredients = RecipeIngredientSerializer(

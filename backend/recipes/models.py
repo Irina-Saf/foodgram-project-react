@@ -19,7 +19,8 @@ class Tag(models.Model):
         unique=True
     )
     color = ColorField(
-        format="hexa",
+        default='#FF0000',
+        format="hex",
         verbose_name='Цвет',
         unique=True
     )
@@ -33,6 +34,10 @@ class Tag(models.Model):
     def trim10(self):
         return u"%s..." % (self.slug[:10],)
     trim10.short_description = 'Слаг'
+
+    def save(self, *args, **kwargs):
+            self.color = self.color.upper()
+            return super(Tag, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Тег'
@@ -199,13 +204,14 @@ class Basket(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
+        related_name='baskets',
         verbose_name='Пользователь',
         help_text='Укажите пользователя'
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='bascets',
+        related_name='baskets',
         verbose_name='Рецепты',
         help_text='Выберите рецепт'
     )
