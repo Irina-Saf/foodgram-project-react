@@ -1,6 +1,7 @@
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -10,7 +11,7 @@ from recipes.models import (Basket, Favorite, Ingredient, IngredientRecipe,
                             Recipe, Tag)
 from users.models import User
 
-from .filters import RecipeFilter
+from .filters import RecipeFilter,IngredientSearchFilter
 from .mixins import UserViewSetMixin
 from .pagination import CustomPaginator
 from .permissions import IsAuthorOrReadOnly
@@ -37,6 +38,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = (IsAuthorOrReadOnly,)
     filterset_class = RecipeFilter
+    filter_backends = [DjangoFilterBackend, ]
     search_fields = ('name',)
     pagination_class = CustomPaginator
     
@@ -128,6 +130,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
+    ilter_backends = (DjangoFilterBackend, IngredientSearchFilter)
     permission_classes = (AllowAny, )
     search_fields = ('name',)
     pagination_class = CustomPaginator
