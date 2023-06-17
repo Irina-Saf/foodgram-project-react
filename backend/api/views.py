@@ -134,4 +134,4 @@ class IngredientViewSet(viewsets.ModelViewSet):
     filterset_class = IngredientFilter
     permission_classes = (AllowAny, )
     search_fields = ('name',)
-    pagination_class = CustomPaginator
+    pagination_class = None
