@@ -12,6 +12,11 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddConstraint(
             model_name='subscribe',
-            constraint=models.CheckConstraint(check=models.Q(('user', models.F('following')), _negated=True), name='Нельзя подписываться на себя'),
+            constraint=models.CheckConstraint(
+                check=models.Q(
+                    ('user',
+                     models.F('following')),
+                    _negated=True),
+                name='Нельзя подписываться на себя'),
         ),
     ]

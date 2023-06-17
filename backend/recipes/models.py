@@ -36,8 +36,8 @@ class Tag(models.Model):
     trim10.short_description = 'Слаг'
 
     def save(self, *args, **kwargs):
-            self.color = self.color.upper()
-            return super(Tag, self).save(*args, **kwargs)
+        self.color = self.color.upper()
+        return super(Tag, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Тег'

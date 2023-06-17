@@ -16,11 +16,21 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='basket',
             name='recipe',
-            field=models.ForeignKey(help_text='Выберите рецепт', on_delete=django.db.models.deletion.CASCADE, related_name='baskets', to='recipes.recipe', verbose_name='Рецепты'),
+            field=models.ForeignKey(
+                help_text='Выберите рецепт',
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='baskets',
+                to='recipes.recipe',
+                verbose_name='Рецепты'),
         ),
         migrations.AlterField(
             model_name='basket',
             name='user',
-            field=models.ForeignKey(help_text='Укажите пользователя', on_delete=django.db.models.deletion.CASCADE, related_name='baskets', to=settings.AUTH_USER_MODEL, verbose_name='Пользователь'),
+            field=models.ForeignKey(
+                help_text='Укажите пользователя',
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='baskets',
+                to=settings.AUTH_USER_MODEL,
+                verbose_name='Пользователь'),
         ),
     ]

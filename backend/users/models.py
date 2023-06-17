@@ -83,7 +83,7 @@ class Subscribe(models.Model):
                 # name='user_and_following_different'
                 name='Нельзя подписываться на себя'
             )
-                ]
+        ]
 
     def __str__(self):
         return f'{self.user} {self.following}'

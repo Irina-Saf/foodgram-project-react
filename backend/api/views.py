@@ -41,7 +41,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filterset_class = RecipeFilter
     search_fields = ('name',)
     pagination_class = CustomPaginator
-    
 
     def get_serializer_class(self):
         if self.action in ('create', 'update', 'partial_update'):
