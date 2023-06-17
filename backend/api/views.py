@@ -11,7 +11,7 @@ from recipes.models import (Basket, Favorite, Ingredient, IngredientRecipe,
                             Recipe, Tag)
 from users.models import User
 
-from .filters import RecipeFilters,IngredientSearchFilter
+from .filters import IngredientFilter, RecipeFilter
 from .mixins import UserViewSetMixin
 from .pagination import CustomPaginator
 from .permissions import IsAuthorOrReadOnly
@@ -37,8 +37,8 @@ class TagViewSet(viewsets.ModelViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = (IsAuthorOrReadOnly,)
-    filterset_class = RecipeFilters
-    filter_backends = [DjangoFilterBackend, ]
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = RecipeFilter
     search_fields = ('name',)
     pagination_class = CustomPaginator
     
@@ -130,7 +130,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    ilter_backends = (DjangoFilterBackend, IngredientSearchFilter)
+    filter_backends = (DjangoFilterBackend, )
+    filterset_class = IngredientFilter
     permission_classes = (AllowAny, )
     search_fields = ('name',)
     pagination_class = CustomPaginator
