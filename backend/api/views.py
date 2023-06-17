@@ -118,8 +118,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             shopping_list.append(
                 f"{ingredient[0]}: {ingredient[1]} {ingredient[2]}.")
         response = HttpResponse(
-            'Cписок покупок:\n' +
-            '\n'.join(map(str, shopping_list)),
+            'Cписок покупок:\n' + '\n'.join(map(str, shopping_list)),
             content_type='text/plain')
         response['Content-Disposition'] = \
             'attachment; filename="shopping_cart.txt"'

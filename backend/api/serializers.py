@@ -24,8 +24,9 @@ class UserGetSerializer(UserSerializer):
         return (
             'request' in self.context
             and self.context.get('request').user.is_authenticated
-            and Subscribe.objects.filter(user=self.context['request'].user,
-                                        following=obj).exists()
+            and Subscribe.objects.filter(
+                user=self.context['request'].user,
+                following=obj).exists()
         )
 
 
