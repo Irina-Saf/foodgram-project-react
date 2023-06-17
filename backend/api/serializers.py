@@ -4,7 +4,7 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
-from recipes.models import Ingredient, IngredientRecipe, Recipe, Tag
+from recipes.models import Ingredient, IngredientRecipe, Recipe, Tag, Favorite, Basket
 from users.models import Subscribe, User
 
 
@@ -108,6 +108,8 @@ class RecipeReadSerializer(serializers.ModelSerializer):
     author = UserGetSerializer(read_only=True)
     tags = TagSerializer(many=True)
     image = Base64ImageField()
+    is_favorited = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField()
     ingredients = RecipeIngredientSerializer(
         many=True, read_only=True, source='recipes')
 
@@ -118,10 +120,27 @@ class RecipeReadSerializer(serializers.ModelSerializer):
             'tags',
             'author',
             'ingredients',
+            'is_favorited',
+            'is_in_shopping_cart',
             'name',
             'image',
             'text',
             'cooking_time',
+        )
+
+    def get_is_favorited(self, obj):
+        return (
+            self.context.get('request').user.is_authenticated
+            and Favorite.objects.filter(user=self.context['request'].user,
+                                        recipe=obj).exists()
+        )
+    
+    def get_is_in_shopping_cart(self, obj):
+        return (
+            self.context.get('request').user.is_authenticated
+            and Basket.objects.filter(
+                user=self.context['request'].user,
+                recipe=obj).exists()
         )
 
 
