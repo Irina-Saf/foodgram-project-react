@@ -19,6 +19,7 @@ jobs:
         python -m pip install --upgrade pip 
         # установка flake8 и его плагинов
         pip install flake8 pep8-naming flake8-broken-line flake8-return flake8-isort
+        cd backend/
         # установка зависимостей
         pip install -r requirements.txt 
 
@@ -46,7 +47,7 @@ jobs:
         with:
           context: backend
           push: true
-          tags: irinasaf/gates:latest
+          tags: irinasaf/infra_backend
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push_to_docker_hub
@@ -80,4 +81,3 @@ jobs:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: ${{ github.workflow }} успешно выполнен!
-          
