@@ -61,7 +61,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo docker pull irinasaf/infra_backend:latest
+            sudo docker pull irinasaf/infra_backend
             sudo docker-compose stop
             sudo docker-compose rm backend
             rm .env
