@@ -74,12 +74,21 @@ class SetPasswordSerializer(serializers.Serializer):
 
 class TagSerializer(serializers.ModelSerializer):
     """Список тегов."""
+    # color = serializers.SerializerMethodField()
     class Meta:
         model = Tag
         fields = (
             'id', 'name',
             'color', 'slug',
         )
+
+    def validate(self, obj):
+        obj['color'] = obj['color'] .upper()
+        if Tag.objects.filter(color=obj['color']).exists():
+            raise serializers.ValidationError(
+                'Такой цвет уже существует'
+            )
+        return obj
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -209,6 +218,16 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         if len(inrgedient_id) != len(ingredient_set):
             raise serializers.ValidationError(
                 'Введите уникальные ингредиенты.'
+            )
+
+        recepie_exists = Recipe.objects.filter(
+            name=obj['name'],
+            text=obj['text'],
+            cooking_time=obj['cooking_time']
+        ).exists()
+        if recepie_exists:
+            raise serializers.ValidationError(
+                'Такой ркцепт уже существует'
             )
 
         tag_id = [item.id for item in obj.get('tags')]

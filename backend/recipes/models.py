@@ -10,6 +10,14 @@ MAX_VALUE_COOKING_TIME = 300,
 MIN_VALUE_AMOUNT = 1,
 
 
+class UpperField(models.CharField):
+    def __init__(self, *args, **kwargs):
+        super(UpperField, self).__init__(*args, **kwargs)
+
+    def get_prep_value(self, value):
+        return str(value).upper()
+
+
 class Tag(models.Model):
     """Модель тегов"""
     name = models.CharField(
@@ -34,10 +42,6 @@ class Tag(models.Model):
     def trim10(self):
         return u"%s..." % (self.slug[:10],)
     trim10.short_description = 'Слаг'
-
-    def save(self, *args, **kwargs):
-        self.color = self.color.upper()
-        return super(Tag, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Тег'
